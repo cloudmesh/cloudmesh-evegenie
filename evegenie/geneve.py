@@ -2,7 +2,7 @@
 """
 Tool for generating Eve schemas from JSON.
 """
-
+from __future__ import print_function
 import os.path
 import sys
 from docopt import docopt
@@ -16,16 +16,14 @@ def run(filename):
     :param filename: input filename
     :return:
     """
-    print ('converting contents of {}'.format(filename))
+    print ('Converting: {}'.format(filename))
     outfile = '{}.settings.py'.format(filename.split('.', 1)[0])
-    print ('file:', outfile)
+    # print ('Output:', outfile)
 
     eg = EveGenie(filename=filename)
 
-    print ("OOO", eg)
-
     eg.write_file(outfile)
-    print ('settings file written to {}'.format(outfile))
+    print ('Settings file written to {}'.format(outfile))
 
 
 def main():
@@ -47,7 +45,7 @@ def main():
 
     arguments = docopt(main.__doc__, sys.argv[1:])
 
-    print(arguments)
+    # print(arguments)
 
     if arguments["--help"]:
         print(main.__doc__)

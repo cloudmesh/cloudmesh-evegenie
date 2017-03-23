@@ -1,6 +1,7 @@
 """
 EveGenie class for building Eve settings and schemas.
 """
+from __future__ import print_function
 import json
 import os.path
 import re
@@ -19,8 +20,6 @@ class EveGenie(object):
     # 'float-float' or 'float - float'. eg: 0.0-1.0
     floatrangeregex = re.compile('^([0-9.]+)\s*?-\s*?([0-9.]+)$', flags=re.M)
 
-    print ("T", template_env)
-
     def __init__(self, data=None, filename=None):
         """
         Initialize EveGenie object. Parses input and sets each endpoint from
@@ -36,7 +35,6 @@ class EveGenie(object):
             if os.path.isfile(filename):
                 with open(filename, 'r') as ifile:
                     data = ifile.read().strip()
-            print ('D', data, type(data))
 
 
         if not isinstance(data, (str, dict, OrderedDict)):
@@ -47,8 +45,6 @@ class EveGenie(object):
 
         self.endpoints = OrderedDict(
             [(k, OrderedDict([('schema', self.parse_endpoint(v))])) for k, v in data.iteritems()])
-
-        print ("E", self.endpoints)
 
 
     def parse_endpoint(self, endpoint_source):
@@ -179,9 +175,8 @@ class EveGenie(object):
         :param filename: output filename
         :return:
         """
-        print ("A")
         template = self.template_env.get_template('settings.py.j2')
-        print("B")
+
         settings = template.render(
             endpoints=OrderedDict(
                 [(endpoint, self.format_endpoint(schema)) for endpoint, schema in self.endpoints.iteritems()])
