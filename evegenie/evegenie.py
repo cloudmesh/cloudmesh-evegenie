@@ -11,7 +11,6 @@ from jinja2 import Environment, PackageLoader
 
 
 class EveGenie(object):
-
     template_env = Environment(loader=PackageLoader('evegenie', 'templates'))
     # 'objectid:sample-endpoint' or 'objectid: sample-endpoint'
     objectidregex = re.compile('^objectid:\s*?(.+)$', flags=re.M)
@@ -20,6 +19,7 @@ class EveGenie(object):
     # 'float-float' or 'float - float'. eg: 0.0-1.0
     floatrangeregex = re.compile('^([0-9.]+)\s*?-\s*?([0-9.]+)$', flags=re.M)
 
+    print ("T", template_env)
 
     def __init__(self, data=None, filename=None):
         """
@@ -36,14 +36,20 @@ class EveGenie(object):
             if os.path.isfile(filename):
                 with open(filename, 'r') as ifile:
                     data = ifile.read().strip()
+            print ('D', data, type(data))
 
-        if not isinstance(data, (basestring, dict, OrderedDict)):
+
+        if not isinstance(data, (str, dict, OrderedDict)):
             raise TypeError('Input is not a string: {}'.format(data))
 
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             data = json.loads(data, object_pairs_hook=OrderedDict)
 
-        self.endpoints = OrderedDict([(k, OrderedDict([('schema', self.parse_endpoint(v))])) for k, v in data.iteritems()])
+        self.endpoints = OrderedDict(
+            [(k, OrderedDict([('schema', self.parse_endpoint(v))])) for k, v in data.iteritems()])
+
+        print ("E", self.endpoints)
+
 
     def parse_endpoint(self, endpoint_source):
         """
@@ -157,8 +163,8 @@ class EveGenie(object):
         # separators prevents trailing whitespace, sort_keys false keeps order of ordereddict
         endpoint = json.dumps(endpoint_schema, indent=4, separators=(',', ': '), sort_keys=False)
         updates = [
-            ('"', '\''), # replace doubles with singles
-            ('true', 'True'), # convert json booleans to python ones
+            ('"', '\''),  # replace doubles with singles
+            ('true', 'True'),  # convert json booleans to python ones
             ('false', 'False')
         ]
         for needle, sub in updates:
@@ -173,17 +179,19 @@ class EveGenie(object):
         :param filename: output filename
         :return:
         """
+        print ("A")
         template = self.template_env.get_template('settings.py.j2')
-
+        print("B")
         settings = template.render(
-            endpoints=OrderedDict([(endpoint, self.format_endpoint(schema)) for endpoint, schema in self.endpoints.iteritems()])
+            endpoints=OrderedDict(
+                [(endpoint, self.format_endpoint(schema)) for endpoint, schema in self.endpoints.iteritems()])
         )
         with open(filename, 'w') as ofile:
             ofile.write(settings + "\n")
 
     def __iter__(self):
-       for k, v in self.endpoints.iteritems():
-          yield k, v
+        for k, v in self.endpoints.iteritems():
+            yield k, v
 
     def __len__(self):
         return len(self.endpoints)
