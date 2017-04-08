@@ -7,6 +7,7 @@ import os.path
 import re
 from types import NoneType
 from collections import OrderedDict
+from six import iteritems
 
 from jinja2 import Environment, PackageLoader
 
@@ -44,10 +45,10 @@ class EveGenie(object):
             data = json.loads(data, object_pairs_hook=OrderedDict)
 
         self.endpoints = OrderedDict(
-            [(k, OrderedDict([('schema', self.parse_endpoint(v))])) for k, v in data.iteritems()])
+            [(k, OrderedDict([('schema', self.parse_endpoint(v, k))])) for k, v in iteritems(data)])
 
 
-    def parse_endpoint(self, endpoint_source):
+    def parse_endpoint(self, endpoint_source, k):
         """
         Takes the values of an endpoint from its raw json representation and
         converts it to the eve schema equivalent.
@@ -55,7 +56,14 @@ class EveGenie(object):
         :param endpoint_source: dict of fields in an endpoint
         :return: dict representing eve schema for the endpoint
         """
-        return OrderedDict([(k, self.parse_item(v)) for k, v in endpoint_source.iteritems()])
+        print ("... converting", k)
+        l = []
+
+        # return OrderedDict([(k, self.parse_item(v)) for k, v in iteritems(endpoint_source)])
+        for k, v in iteritems(endpoint_source):
+            print ("......", k + ":", v)
+            l.append((k, self.parse_item(v)))
+        return (OrderedDict(l))
 
     def parse_item(self, endpoint_item):
         """
@@ -69,7 +77,7 @@ class EveGenie(object):
         if item['type'] == 'dict':
             # recursively parse each item in a dict and add to item schema
             item['schema'] = OrderedDict()
-            for k, i in endpoint_item.iteritems():
+            for k, i in iteritems(endpoint_item):
                 item['schema'][k] = self.parse_item(i)
 
                 # if allow_unknown, remove the type and set allow_unknown.
@@ -179,13 +187,13 @@ class EveGenie(object):
 
         settings = template.render(
             endpoints=OrderedDict(
-                [(endpoint, self.format_endpoint(schema)) for endpoint, schema in self.endpoints.iteritems()])
+                [(endpoint, self.format_endpoint(schema)) for endpoint, schema in iteritems(self.endpoints)])
         )
         with open(filename, 'w') as ofile:
             ofile.write(settings + "\n")
 
     def __iter__(self):
-        for k, v in self.endpoints.iteritems():
+        for k, v in iteritems(self.endpoints):
             yield k, v
 
     def __len__(self):
