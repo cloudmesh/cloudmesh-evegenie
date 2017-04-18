@@ -8,9 +8,22 @@ import re
 from types import NoneType
 from collections import OrderedDict
 from six import iteritems
+import six
+import sys
 
 from jinja2 import Environment, PackageLoader
 
+
+def decode_to_str(input):
+    if isinstance(input, dict):
+        return {decode_to_str(key): decode_to_str(value)
+                for key, value in input.iteritems()}
+    elif isinstance(input, list):
+        return [decode_to_str(element) for element in input]
+    elif isinstance(input, unicode):
+        return input.encode('utf-8')
+    else:
+        return input
 
 class EveGenie(object):
     template_env = Environment(loader=PackageLoader('evegenie', 'templates'))
@@ -44,9 +57,11 @@ class EveGenie(object):
         if isinstance(data, str):
             data = json.loads(data, object_pairs_hook=OrderedDict)
 
-        self.endpoints = OrderedDict(
-            [(k, OrderedDict([('schema', self.parse_endpoint(v, k))])) for k, v in iteritems(data)])
+        #self.endpoints = decode_to_str(OrderedDict(
+        #    [(k, OrderedDict([('schema', self.parse_endpoint(v, k))])) for k, v in six.iteritems(data)]))
 
+        self.endpoints = OrderedDict(
+            [(k, OrderedDict([('schema', self.parse_endpoint(v, k))])) for k, v in six.iteritems(data)])
 
     def parse_endpoint(self, endpoint_source, k):
         """

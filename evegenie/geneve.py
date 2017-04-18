@@ -7,7 +7,7 @@ import os.path
 import sys
 from docopt import docopt
 from evegenie import EveGenie
-
+from cloudmesh.common.error import Error
 
 def run(filename):
     """
@@ -57,7 +57,7 @@ def main():
             run(filename)
     except Exception as e:
         print ("ERROR: generating schema")
-        print (e)
+        Error.traceback(error=e, debug=True, trace=True)
 
 
 if __name__ == '__main__':
