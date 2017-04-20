@@ -29,7 +29,7 @@ docopt
 version = readfile("VERSION")[0].strip()
 readme = readfile('README.md')
 
-NAME = "evegenie"
+NAME = "cloudmesh.evegenie"
 DESCRIPTION = "A dynamic extensible CMD based command shell"
 AUTHOR = "frodopwns, ultimateboy, nicolaiarocci, laszewsk"
 AUTHOR_EMAIL = "laszewski@gmail.com" # replace with yours

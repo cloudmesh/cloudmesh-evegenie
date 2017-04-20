@@ -1,4 +1,5 @@
-# Eve Genie
+Eve Genie
+-----------
 
 [![Documentation](https://readthedocs.org/projects/evegenie/badge/?version=latest)](http://evegenie.readthedocs.org/en/latest/) [![Build Status](https://travis-ci.org/drud/evegenie.svg?branch=master)](https://travis-ci.org/drud/evegenie) [![Coverage Status](https://coveralls.io/repos/drud/evegenie/badge.svg?branch=master&service=github)](https://coveralls.io/github/drud/evegenie?branch=master)
 

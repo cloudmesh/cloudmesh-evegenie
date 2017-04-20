@@ -58,7 +58,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'Eve Genie'
 copyright = u'2015, Erin Corson, Matt Tucker'
-author = u'Erin Corson, Matt Tucker'
+author = u'Erin Corson, Matt Tucker, modified by Gregor von Laszewski'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
