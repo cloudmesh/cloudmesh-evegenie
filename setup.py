@@ -20,6 +20,7 @@ def readfile(filename):
 
 
 requiers = """
+cloudmesh.common
 eve
 docopt
 """.split("\n")
@@ -63,8 +64,6 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     install_requires=requiers,
-    # dependency_links = dependency_links,
-    # test_suite="runtests.runtests",
     tests_require=[
         "flake8",
         "coverage",
@@ -72,7 +71,8 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'evegenie = evegenie.geneve:main',
+            'evegenie = cloudmesh.geneve:main',
         ],
     },
+    namespace_packages=['cloudmesh'],
 )

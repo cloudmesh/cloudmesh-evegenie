@@ -122,3 +122,8 @@ register: dist
 
 upload: dist
 	twine upload dist/*
+
+source: 
+	cd ../cloudmesh.cmd5; make source
+	python setup.py install; pip install .
+	cms help

@@ -13,6 +13,7 @@ import sys
 
 from jinja2 import Environment, PackageLoader
 
+from pprint import pprint
 
 def decode_to_str(input):
     if isinstance(input, dict):
@@ -26,7 +27,7 @@ def decode_to_str(input):
         return input
 
 class EveGenie(object):
-    template_env = Environment(loader=PackageLoader('evegenie', 'templates'))
+    template_env = Environment(loader=PackageLoader('cloudmesh', 'templates'))
     # 'objectid:sample-endpoint' or 'objectid: sample-endpoint'
     objectidregex = re.compile('^objectid:\s*?(.+)$', flags=re.M)
     # 'int-int' or 'int - int'. eg: '1-10'
@@ -198,7 +199,12 @@ class EveGenie(object):
         :param filename: output filename
         :return:
         """
-        template = self.template_env.get_template('settings.py.j2')
+
+        print ("F", filename)
+        self.template_env = Environment(loader=PackageLoader('cloudmesh', 'templates'))
+        print ("T", self.template_env)
+        template = self.template_env.get_template('settings.py')
+        print ("t", template)
 
         settings = template.render(
             endpoints=OrderedDict(

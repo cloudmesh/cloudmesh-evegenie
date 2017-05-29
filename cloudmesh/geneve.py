@@ -6,7 +6,7 @@ from __future__ import print_function
 import os.path
 import sys
 from docopt import docopt
-from evegenie import EveGenie
+from cloudmesh.evegenie import EveGenie
 from cloudmesh.common.error import Error
 
 def run(filename):
